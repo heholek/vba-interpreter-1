@@ -1,54 +1,34 @@
 # vba-interpreter
-implement a  vba interpreter in java
+An interpreter for Microsoft Office VBA Macros written in Java. The purpose of
+this interpreter is to detect malware in macros.
 
-VBA 解析器、基于VBA语言的规则引擎
+The project is currently in alpha stage, there is a lot of functionality not
+yet implemented and plenty of bugs. Nevertheless, we welcome if you fork this
+project, report issues on Github, and send us pull requests for code
+improvements.
 
-![preview](/vba/FormTwoControls/2controls.jpg?raw=true)
-![Caculator on Mac](/vba/Calculator/calc_mac.png?raw=true)
-![Caculator on Win](/vba/Calculator/calc_win.png?raw=true)
-![Caculator on Old VB](/vba/Calculator/vb_calc_win.png?raw=true)
-
-coding........
-
-----
-
-* 目前已经实现了绝大部分vba语言特性（传值传址、集合、默认方法、默认属性、类、implement、事件、调试等等）
-* 不准备实现文件等等古老的命令语句
-* 扩充了如下java交互的特性：
-0. CreateObject("java class", construtor arguments)
-0. java.util.Map 对象可通过 !key 访问成员
-0. java.util.List 对象可通过 (index) 访问成员
-0. bean 可使用属性方式访问
-* 设计了规则语法，使之可以扮演规则引擎（这是本项目的创建动机）：
-
-```vb
-Sub Main()
-   Dim r 
-   Stop
-   r = SqrRoot(1.0, 2)
-   Debug.Print r
-End Sub
-
-Function IsGoodEnough(guess As Double, x As Double) As Boolean
-    IsGoodEnough = Abs(x - guess * guess) <= 0.00001
-End Function
-
-Function NewGuess(guess As Double, x As Double) As Double
-    NewGuess = (guess + x / guess) / 2.0
-End Function
-
-Rule SqrRoot(guess As Double, x As Double) As Double
-	SqrRoot = SqrRoot(NewGuess(guess, x), x)
-End Rule
-
-Rule SqrRoot When IsGoodEnough(guess, x)
-	SqrRoot = guess
-End Rule
-
+## Compiling
+This project uses a maven build system. Install Maven 2 on your distribution to
+compile.
+To create the binary jar file, run:
 ```
-规则是多个同名 Function 构成的束，在定义时使用  When 表达式实现入口匹配。
+mvn package
+```
 
-----
+## Running
+Run with:
+```
+java -jar target/vbainterpreter-*-with-dependencies.jar <document>
+```
 
-VB 语言自身较为落后，语法也有诸多设计不当。最严重的莫过于函数和数组都通过 ()访问，后面扩充的Item类成员也使用 ()，导致语法上歧义丛生。但 VB 语言采取的`函数名=结果`返回结果的形式非常适合编写业务规则，本项目的动机主要也是为了实现一个友好实用的规则引擎。
+There is also a way to dump the VBA code seen by the interpreter:
+```
+java -classpath vbainterpreter-*-with-dependencies.jar thirdparty.org.apache.poi.poifs.macros.VBAMacroExtractor <document>
+```
+
+## License
+This code is licensed under the MIT license. See the LICENSE file for the
+license's text.  This project is based on [vba-interpreter by
+Ishua](https://github.com/Inshua/vba-interpreter).
+
 

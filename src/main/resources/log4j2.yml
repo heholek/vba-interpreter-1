@@ -1,0 +1,32 @@
+Configuration:
+  status: warn
+  name: YAMLConfigTest
+  properties:
+  thresholdFilter:
+    level: debug
+  appenders:
+    Console:
+      name: STDERR
+      target: SYSTEM_ERR
+      PatternLayout:
+        Pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+ 
+  Loggers:
+    logger:
+      -
+        name: com.cisco.vbainterpreter
+        level: debug
+        additivity: false
+        AppenderRef:
+          ref: STDERR
+      -
+        name: org.siphon.visualbasic
+        level: debug
+        additivity: false
+        AppenderRef:
+          ref: STDERR
+          
+    Root:
+      level: error
+      AppenderRef:
+        ref: STDERR
